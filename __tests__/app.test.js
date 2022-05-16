@@ -18,7 +18,7 @@ describe('GET /api/topics', () => {
         .get('/api/topics')
         .expect(200)
         .then(({ body : { topics } }) => {
-            expect((topics)).toHaveLength(3)
+            expect(topics).toHaveLength(3)
             topics.forEach((topic) => {
                 expect(topic).toEqual(
                   expect.objectContaining({
