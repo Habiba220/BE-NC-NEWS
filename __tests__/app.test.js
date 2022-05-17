@@ -78,3 +78,70 @@ describe('GET /api/', () => {
 
     });
 });
+
+describe.only('PATCH /api/', () => {
+    describe('PATCH /api/articles/:article_id', () => {
+        test('200: responds with the updated votes article object', () => {
+            const reqBody = { inc_votes : 1 }
+            return request(app)
+            .patch('/api/articles/3')
+            .send(reqBody)
+            .expect(200)
+            .then(({ body : { updatedArticle } }) => {
+                expect(updatedArticle).toEqual({
+                    article_id: 3,
+                    title: "Eight pug gifs that remind me of mitch",
+                    topic: "mitch",
+                    author: "icellusedkars",
+                    body: "some gifs",
+                    created_at: "2020-11-03T09:12:00.000Z",
+                    votes: 1,
+                  })
+            })
+        });
+
+        test('400: responds with invalid article id ', () => {
+            const reqBody = { inc_votes : 1 }
+            return request(app)
+            .patch('/api/articles/uehh')
+            .send(reqBody)
+            .expect(400)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('invalid request')
+            })
+        });
+    
+        test('404: not found, article id not found', () => {
+            const reqBody = { inc_votes : 1 }
+            return request(app)
+            .patch('/api/articles/1995')
+            .send(reqBody)
+            .expect(404)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('id not found')
+            })
+        })
+
+        test('400: invalid value type responds with invalid data type', () => {
+            const reqBody = { inc_votes : 'ubbb' }
+            return request(app)
+            .patch('/api/articles/uehh')
+            .send(reqBody)
+            .expect(400)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('invalid request')
+            })
+        });
+    
+        test('400: no value provided, responds with no content', () => {
+            const reqBody = {};
+            return request(app)
+            .patch('/api/articles/3')
+            .send(reqBody)
+            .expect(400)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('no content provided')
+            })
+        })
+    });
+});
