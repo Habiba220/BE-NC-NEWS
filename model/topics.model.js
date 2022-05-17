@@ -6,5 +6,4 @@ exports.fetchTopics = () => {
   return db.query(queryStr).then(({ rows }) => {
       return rows;
   })
-  
 }
