@@ -133,12 +133,12 @@ describe.only('PATCH /api/', () => {
             })
         });
     
-        test('404: no value provided, responds with no content', () => {
+        test('400: no value provided, responds with no content', () => {
             const reqBody = {};
             return request(app)
             .patch('/api/articles/3')
             .send(reqBody)
-            .expect(404)
+            .expect(400)
             .then(({ body: { message } }) => {
                 expect(message).toBe('no content provided')
             })

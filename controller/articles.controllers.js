@@ -14,7 +14,7 @@ exports.patchArticleByID = (req, res, next) => {
     const { article_id } = req.params;
     const { inc_votes } = req.body;
     
-    let promises = [fetchArticleByID(article_id), updateArticleByID(article_id, inc_votes)];
+    const promises = [fetchArticleByID(article_id), updateArticleByID(article_id, inc_votes)];
 
     Promise.all(promises).then(([_, updatedArticle]) => {
         res.status(200).send({ updatedArticle })

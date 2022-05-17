@@ -18,7 +18,7 @@ exports.updateArticleByID = (id, incVotes) => {
     const queryStr1 = 'SELECT votes FROM articles WHERE article_id = $1';
     const queryValues1 = [id]
     if(!incVotes) {
-        return Promise.reject({status: 404, message: 'no content provided'})
+        return Promise.reject({status: 400, message: 'no content provided'})
     }
     
     return db.query(queryStr1, queryValues1).then(({ rows }) => {
