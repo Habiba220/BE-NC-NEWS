@@ -77,6 +77,32 @@ describe('GET /api/', () => {
         })
 
     });
+
+    describe.only('GET /api/users', () => {
+        test('200: responds with an array of user objects, each with username property', () => {
+            return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then(({ body : { users } }) => {
+                expect(users).toHaveLength(4)
+                users.forEach((user) => {
+                    expect(user).toEqual(
+                      expect.objectContaining({
+                        username: expect.any(String),
+                      })
+                    );
+                  });
+            })
+        });
+        test('404: endpoint not found', () => {
+            return request(app)
+            .get('/api/890978')
+            .expect(404)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('invalid endpoint')
+            })
+        })
+    });
 });
 
 describe.only('PATCH /api/', () => {
