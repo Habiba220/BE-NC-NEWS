@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data");
 const request = require("supertest");
 const app = require("../app.js");
 const db = require("../db/connection");
+require("jest-sorted");
 
 beforeEach(() => {
     return seed(testData)
@@ -100,6 +101,39 @@ describe('GET /api/', () => {
 
     });
 
+    describe('GET /api/articles', () => {
+        test('200: responds with an articles array of article objects, each of which should have the following properties: author, title, article_id, topic, created at, votes, comment_count', () => {
+            return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body : { articles } }) => {
+                expect(articles).toHaveLength(12)
+                articles.forEach((article) => {
+                    expect(article).toEqual(
+                      expect.objectContaining({
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        comment_count: expect.any(Number)
+                      })
+                    );
+                  });
+            })
+        });
+
+        test("200: responds with an articles array of article objects, sorted by date in descending order", () => {
+            return request(app)
+              .get("/api/articles")
+              .expect(200)
+              .then(({ body: { articles } }) => {
+                expect(articles).toBeSorted('created_at', { descending: true, coerce: true,});
+              });
+          });
+    });
     describe('GET /api/users', () => {
         test('200: responds with an array of user objects, each with username property', () => {
             return request(app)
@@ -125,9 +159,7 @@ describe('GET /api/', () => {
             })
         })
     });
-});
 
-describe('PATCH /api/', () => {
     describe('PATCH /api/articles/:article_id', () => {
         test('200: responds with the updated votes article object', () => {
             const reqBody = { inc_votes : 1 }
@@ -149,17 +181,6 @@ describe('PATCH /api/', () => {
                   )
             })
         });
-
-        test('400: responds with invalid article id ', () => {
-            const reqBody = { inc_votes : 1 }
-            return request(app)
-            .patch('/api/articles/uehh')
-            .send(reqBody)
-            .expect(400)
-            .then(({ body: { message } }) => {
-                expect(message).toBe('invalid request')
-            })
-        });
     
         test('404: not found, article id not found', () => {
             const reqBody = { inc_votes : 1 }
@@ -171,7 +192,19 @@ describe('PATCH /api/', () => {
                 expect(message).toBe('id not found')
             })
         })
-
+    
+        test('400: responds with invalid article id ', () => {
+            const reqBody = { inc_votes : 1 }
+            return request(app)
+            .patch('/api/articles/uehh')
+            .send(reqBody)
+            .expect(400)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('invalid request')
+            })
+        });
+    
+    
         test('400: invalid value type responds with invalid data type', () => {
             const reqBody = { inc_votes : 'ubbb' }
             return request(app)
@@ -195,3 +228,4 @@ describe('PATCH /api/', () => {
         })
     });
 });
+

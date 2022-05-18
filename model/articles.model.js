@@ -25,12 +25,8 @@ exports.updateArticleByID = (id, incVotes) => {
     }
     
     return db.query(queryStr1, queryValues1).then(({ rows }) => {
-        
-        let { votes } = rows[0];
-        votes += incVotes
-         
-        const queryStr2 = 'UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *';
-        const queryValues2 = [votes, id]
+        const queryStr2 = 'UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *';
+        const queryValues2 = [incVotes, id]
 
         return db.query(queryStr2, queryValues2).then(({ rows }) => {
             if (rows.length === 0) {
@@ -38,5 +34,16 @@ exports.updateArticleByID = (id, incVotes) => {
             } 
             return rows[0];
         })
+    })
+}
+
+exports.fetchArticles = () => {
+    const queryStr = `SELECT articles.*, COUNT(comments.comment_id)::INT AS comment_count 
+    FROM articles 
+    LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id 
+    ORDER BY articles.created_at DESC`;
+
+    return db.query(queryStr).then(({ rows }) => {
+        return rows;
     })
 }
