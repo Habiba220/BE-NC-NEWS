@@ -76,9 +76,27 @@ describe('GET /api/', () => {
             })
         })
 
+        test('200: responds with article object with the added property comment_count when passed comment_count query', () => {
+            return request(app)
+            .get('/api/articles/3?comment_count')
+            .expect(200)
+            .then(({ body : { article } }) => {
+                expect(article).toEqual({
+                    article_id: 3,
+                    title: "Eight pug gifs that remind me of mitch",
+                    topic: "mitch",
+                    author: "icellusedkars",
+                    body: "some gifs",
+                    created_at: "2020-11-03T09:12:00.000Z",
+                    votes: 0,
+                    comment_count:2
+                  })
+            })
+          });
+
     });
 
-    describe.only('GET /api/users', () => {
+    describe('GET /api/users', () => {
         test('200: responds with an array of user objects, each with username property', () => {
             return request(app)
             .get('/api/users')
@@ -105,7 +123,7 @@ describe('GET /api/', () => {
     });
 });
 
-describe.only('PATCH /api/', () => {
+describe('PATCH /api/', () => {
     describe('PATCH /api/articles/:article_id', () => {
         test('200: responds with the updated votes article object', () => {
             const reqBody = { inc_votes : 1 }

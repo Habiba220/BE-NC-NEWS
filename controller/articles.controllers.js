@@ -2,12 +2,15 @@ const { fetchArticleByID, updateArticleByID } = require("../model/articles.model
 
 
 exports.getArticleByID = (req, res, next) => {
-    const { article_id } = req.params
-    
-    fetchArticleByID(article_id).then((article) => {
+    const { article_id } = req.params;
+    const { comment_count } = req.query;
+
+    fetchArticleByID(article_id, comment_count).then((article) => {
         res.status(200).send({ article })
     })
-    .catch(next)
+    .catch((err) => {
+        next(err)
+    })
 }
 
 exports.patchArticleByID = (req, res, next) => {
