@@ -46,15 +46,17 @@ describe('GET /api/', () => {
             .get('/api/articles/3')
             .expect(200)
             .then(({ body : { article } }) => {
-                expect(article).toEqual({
-                    article_id: 3,
-                    title: "Eight pug gifs that remind me of mitch",
-                    topic: "mitch",
-                    author: "icellusedkars",
-                    body: "some gifs",
-                    created_at: "2020-11-03T09:12:00.000Z",
-                    votes: 0,
-                  })
+                expect(article).toEqual(
+                    expect.objectContaining({
+                        article_id: 3,
+                        title: "Eight pug gifs that remind me of mitch",
+                        topic: "mitch",
+                        author: "icellusedkars",
+                        body: "some gifs",
+                        created_at: "2020-11-03T09:12:00.000Z",
+                        votes: 0,
+                    })
+                  );
             })
         });
 
@@ -76,21 +78,23 @@ describe('GET /api/', () => {
             })
         })
 
-        test('200: responds with article object with the added property comment_count when passed comment_count query', () => {
+        test('200: feature request now responds with article object with the added property comment_count', () => {
             return request(app)
-            .get('/api/articles/3?comment_count')
+            .get('/api/articles/3')
             .expect(200)
             .then(({ body : { article } }) => {
-                expect(article).toEqual({
-                    article_id: 3,
-                    title: "Eight pug gifs that remind me of mitch",
-                    topic: "mitch",
-                    author: "icellusedkars",
-                    body: "some gifs",
-                    created_at: "2020-11-03T09:12:00.000Z",
-                    votes: 0,
-                    comment_count:2
-                  })
+                expect(article).toEqual(
+                    expect.objectContaining({
+                        article_id: 3,
+                        title: "Eight pug gifs that remind me of mitch",
+                        topic: "mitch",
+                        author: "icellusedkars",
+                        body: "some gifs",
+                        created_at: "2020-11-03T09:12:00.000Z",
+                        votes: 0,
+                        comment_count: 2
+                    })
+                  );
             })
           });
 
@@ -132,15 +136,17 @@ describe('PATCH /api/', () => {
             .send(reqBody)
             .expect(200)
             .then(({ body : { updatedArticle } }) => {
-                expect(updatedArticle).toEqual({
-                    article_id: 3,
-                    title: "Eight pug gifs that remind me of mitch",
-                    topic: "mitch",
-                    author: "icellusedkars",
-                    body: "some gifs",
-                    created_at: "2020-11-03T09:12:00.000Z",
-                    votes: 1,
-                  })
+                expect(updatedArticle).toEqual(
+                    expect.objectContaining({
+                        article_id: 3,
+                        title: "Eight pug gifs that remind me of mitch",
+                        topic: "mitch",
+                        author: "icellusedkars",
+                        body: "some gifs",
+                        created_at: "2020-11-03T09:12:00.000Z",
+                        votes: 1, 
+                    })
+                  )
             })
         });
 

@@ -1,37 +1,19 @@
 const db = require("../db/connection");
 
-exports.fetchArticleByID = (id, comments) => {
-
-    // console.log(comments, '<< comments')
-    // console.log(typeof comments, '<< type of comments')
-    //console.log(comments, '<< comments')
-
-    const queryStr = 'SELECT * FROM articles WHERE article_id = $1';
+exports.fetchArticleByID = (id) => {
+    const queryStr = `SELECT articles.*, COUNT(comments.comment_id)::INT AS comment_count 
+    FROM articles 
+    LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id`;
     const queryValues = [id]
 
-    const queryStrB = 'SELECT comment_id FROM comments WHERE article_id = $1';
-    const queryValuesB = [id]
-
-    let promises = [db.query(queryStr, queryValues)]
-
-    if(typeof comments === 'string') {
-        promises.push(db.query(queryStrB, queryValuesB))
-    }
-
-    return Promise.all(promises).then(([article, commentsRes]) => {
-       if (article.rows.length === 0) {
-           return Promise.reject({ status: 404, message: 'id not found'})
+    return db.query(queryStr, queryValues).then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, message: 'id not found'})
         } 
-        
-        const articleObj = article.rows[0];
-        if(typeof comments === 'string') {
-            const commentCount = commentsRes.rows.length;
-            articleObj.comment_count = commentCount;
-        }
-
-        return articleObj;
+        return rows[0];
     })
 }
+
 
 
 exports.updateArticleByID = (id, incVotes) => {
