@@ -115,7 +115,6 @@ describe('GET /api/', () => {
                         title: expect.any(String),
                         topic: expect.any(String),
                         author: expect.any(String),
-                        body: expect.any(String),
                         created_at: expect.any(String),
                         votes: expect.any(Number),
                         comment_count: expect.any(Number)
@@ -125,7 +124,7 @@ describe('GET /api/', () => {
             })
         });
 
-        test.only("200: responds with an articles array of article objects, sorted by date in descending order", () => {
+        test("200: responds with an articles array of article objects, sorted by date in descending order", () => {
             return request(app)
               .get("/api/articles")
               .expect(200)
