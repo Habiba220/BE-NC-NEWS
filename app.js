@@ -1,5 +1,6 @@
 const express = require("express");
-const { getArticleByID, patchArticleByID, getArticles, getArticleComments } = require("./controller/articles.controllers");
+const { getArticleByID, patchArticleByID, getArticles } = require("./controller/articles.controllers");
+const { getArticleComments } = require("./controller/comments.controller");
 const { invalidEnpointError, customError, internalServerError, PSQLerror } = require("./controller/errors.controllers");
 const { getTopics } = require("./controller/topics.controller");
 const { getUsers } = require("./controller/users.controllers");
