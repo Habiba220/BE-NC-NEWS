@@ -7,9 +7,7 @@ exports.getArticleByID = (req, res, next) => {
     fetchArticleByID(article_id).then((article) => {
         res.status(200).send({ article })
     })
-    .catch((err) => {
-        next(err)
-    })
+    .catch(next)
 }
 
 exports.patchArticleByID = (req, res, next) => {
@@ -21,9 +19,7 @@ exports.patchArticleByID = (req, res, next) => {
     Promise.all(promises).then(([updatedArticle]) => {
         res.status(200).send({ updatedArticle })
     })
-    .catch((err) => {
-        next(err)
-    })
+    .catch(next)
 }
 
 exports.getArticles = (req, res, next) => {
@@ -32,3 +28,4 @@ exports.getArticles = (req, res, next) => {
     })
     .catch(next)
 }
+
