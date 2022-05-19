@@ -1,5 +1,5 @@
 const express = require("express");
-const { getArticleByID, patchArticleByID, getArticles } = require("./controller/articles.controllers");
+const { getArticleByID, patchArticleByID, getArticles, getArticleComments } = require("./controller/articles.controllers");
 const { invalidEnpointError, customError, internalServerError, PSQLerror } = require("./controller/errors.controllers");
 const { getTopics } = require("./controller/topics.controller");
 const { getUsers } = require("./controller/users.controllers");
@@ -11,6 +11,7 @@ app.get('/api/topics', getTopics)
 app.get('/api/articles/:article_id', getArticleByID)
 app.get('/api/articles', getArticles)
 app.get('/api/users', getUsers)
+app.get('/api/articles/:article_id/comments', getArticleComments)
 
 app.patch('/api/articles/:article_id', patchArticleByID)
 

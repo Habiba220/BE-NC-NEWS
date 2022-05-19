@@ -133,6 +133,56 @@ describe('GET /api/', () => {
               });
           });
     });
+
+    describe('GET /api/articles/:article_id/comments', () => {
+        test('200: responds with an array of comments for the given article_id of which each comment should have comment_id, votes, created_at, author, body', () => {
+            return request(app)
+            .get('/api/articles/3/comments')
+            .expect(200)
+            .then(({ body : { comments } }) => {
+                expect(comments).toHaveLength(2)
+                comments.forEach((comment) => {
+                    expect(comment).toEqual(
+                      expect.objectContaining({
+                        comment_id: expect.any(Number),
+                        body: expect.any(String),
+                        author: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                      })
+                    );
+                  });
+            })
+        });
+
+        test('400: bad request, responds with invalid article id ', () => {
+            return request(app)
+            .get('/api/articles/uehh/comments')
+            .expect(400)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('invalid request')
+            })
+        });
+    
+        test('404: not found, article id not found', () => {
+            return request(app)
+            .get('/api/articles/1995/comments')
+            .expect(404)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('id not found')
+            })
+        })
+
+        test('200: responds with empty array when article id is valid but no comments found', () => {
+            return request(app)
+            .get('/api/articles/2/comments')
+            .expect(200)
+            .then(({ body : { comments } }) => {
+                expect(comments).toEqual([])
+            })
+        });
+    });
+
     describe('GET /api/users', () => {
         test('200: responds with an array of user objects, each with username property', () => {
             return request(app)

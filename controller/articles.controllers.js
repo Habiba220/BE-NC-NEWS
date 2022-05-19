@@ -1,4 +1,4 @@
-const { fetchArticleByID, updateArticleByID, fetchArticles } = require("../model/articles.model")
+const { fetchArticleByID, updateArticleByID, fetchArticles, fetchArticleComments } = require("../model/articles.model")
 
 
 exports.getArticleByID = (req, res, next) => {
@@ -7,9 +7,7 @@ exports.getArticleByID = (req, res, next) => {
     fetchArticleByID(article_id).then((article) => {
         res.status(200).send({ article })
     })
-    .catch((err) => {
-        next(err)
-    })
+    .catch(next)
 }
 
 exports.patchArticleByID = (req, res, next) => {
@@ -21,14 +19,22 @@ exports.patchArticleByID = (req, res, next) => {
     Promise.all(promises).then(([updatedArticle]) => {
         res.status(200).send({ updatedArticle })
     })
-    .catch((err) => {
-        next(err)
-    })
+    .catch(next)
 }
 
 exports.getArticles = (req, res, next) => {
     fetchArticles().then((articles) => {
         res.status(200).send({ articles })
+    })
+    .catch(next)
+}
+
+exports.getArticleComments = (req, res, next) => {
+    const { article_id } = req.params;
+
+    const promises = [fetchArticleComments( article_id ), fetchArticleByID( article_id )]
+    Promise.all(promises).then(([comments]) => {
+        res.status(200).send({ comments })
     })
     .catch(next)
 }
