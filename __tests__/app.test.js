@@ -125,12 +125,12 @@ describe('GET /api/', () => {
             })
         });
 
-        test("200: responds with an articles array of article objects, sorted by date in descending order", () => {
+        test.only("200: responds with an articles array of article objects, sorted by date in descending order", () => {
             return request(app)
               .get("/api/articles")
               .expect(200)
               .then(({ body: { articles } }) => {
-                expect(articles).toBeSorted('created_at', { descending: true, coerce: true,});
+                expect(articles).toBeSorted('created_at', {descending : true});
               });
           });
     });

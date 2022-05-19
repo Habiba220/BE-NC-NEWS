@@ -38,12 +38,15 @@ exports.updateArticleByID = (id, incVotes) => {
 }
 
 exports.fetchArticles = () => {
+    console.log('hereeee')
+
     const queryStr = `SELECT articles.*, COUNT(comments.comment_id)::INT AS comment_count 
     FROM articles 
-    LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id 
-    ORDER BY articles.created_at DESC`;
-
+    LEFT JOIN comments ON articles.article_id = comments.article_id 
+    GROUP BY articles.article_id  ORDER BY articles.created_at DESC`;
+   
     return db.query(queryStr).then(({ rows }) => {
+        console.log(rows)
         return rows;
     })
 }
