@@ -1,6 +1,6 @@
 const express = require("express");
 const { getArticleByID, patchArticleByID, getArticles } = require("./controller/articles.controllers");
-const { getArticleComments } = require("./controller/comments.controller");
+const { getArticleComments, postCommentByArticle } = require("./controller/comments.controller");
 const { invalidEnpointError, customError, internalServerError, PSQLerror } = require("./controller/errors.controllers");
 const { getTopics } = require("./controller/topics.controller");
 const { getUsers } = require("./controller/users.controllers");
@@ -15,6 +15,8 @@ app.get('/api/users', getUsers)
 app.get('/api/articles/:article_id/comments', getArticleComments)
 
 app.patch('/api/articles/:article_id', patchArticleByID)
+
+app.post('/api/articles/:article_id/comments', postCommentByArticle)
 
 app.use("/*", invalidEnpointError );
 app.use(PSQLerror)
