@@ -276,5 +276,87 @@ describe('GET /api/', () => {
             })
         })
     });
+
+    describe('POST /api/articles/:article_id/comments', () => {
+        test('200: posts a new comment and responds with the new comment object ', () => {
+            const body = {username: "icellusedkars", body: 'nice article'}
+
+            return request(app)
+            .post('/api/articles/3/comments')
+            .send(body)
+            .expect(200)
+            .then(({ body : {new_comment} }) => {
+                expect(new_comment).toEqual(
+                    expect.objectContaining({
+                        comment_id: 19,
+                        author: "icellusedkars",
+                        body: 'nice article',
+                        votes: 0,
+                        article_id: 3,
+                        created_at: expect.any(String)
+                    })
+                )
+            })
+        });
+
+        test('400: username/body incorrect data type', () => {
+            const body = {username: 34532, body: 'nice article'}
+
+            return request(app)
+            .post('/api/articles/3/comments')
+            .send(body)
+            .expect(400)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('invalid request')
+            })
+        });
+
+        test('404: username not found', () => {
+            const body = {username: "habiba", body: 'nice article'}
+
+            return request(app)
+            .post('/api/articles/3/comments')
+            .send(body)
+            .expect(404)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('user not found')
+            })
+        });
+
+        test('400: bad request, responds with invalid article id ', () => {
+            const body = {username: "icellusedkars", body: 'nice article'}
+
+            return request(app)
+            .post('/api/articles/uehh/comments')
+            .send(body)
+            .expect(400)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('invalid request')
+            })
+        });
+    
+        test('404: not found, article id not found', () => {
+            const body = {username: "icellusedkars", body: 'nice article'}
+
+            return request(app)
+            .post('/api/articles/1995/comments')
+            .send(body)
+            .expect(404)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('id not found')
+            })
+        })
+
+        test('400: no value provided, responds with no content', () => {
+            const body = {};
+            return request(app)
+            .post('/api/articles/3/comments')
+            .send(body)
+            .expect(400)
+            .then(({ body: { message } }) => {
+                expect(message).toBe('no content provided')
+            })
+        })
+    });
 });
 
