@@ -277,7 +277,7 @@ describe('GET /api/', () => {
         })
     });
 
-    describe.only('POST /api/articles/:article_id/comments', () => {
+    describe('POST /api/articles/:article_id/comments', () => {
         test('200: posts a new comment and responds with the new comment object ', () => {
             const body = {username: "icellusedkars", body: 'nice article'}
 
@@ -288,7 +288,7 @@ describe('GET /api/', () => {
             .then(({ body : {new_comment} }) => {
                 expect(new_comment).toEqual(
                     expect.objectContaining({
-                        comment_id: expect.any(Number),
+                        comment_id: 19,
                         author: "icellusedkars",
                         body: 'nice article',
                         votes: 0,
